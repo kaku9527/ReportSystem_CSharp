@@ -1,0 +1,149 @@
+﻿@using FPCCTradePointWeb.Models.DataBase;
+@{
+    ViewBag.Title = "Index";
+    List<FPCCTradePoint> results = ViewBag.results;
+}
+
+<style>
+    .selected_tr {
+        background-color: #C8E0E8;
+    }
+</style>
+
+<h2>台塑補點報表</h2>
+<div>
+    <button id="btn_query">查詢</button>
+    <button id="btn_create">新增/修改</button>
+    <button id="btn_delete">刪除</button>
+</div>
+
+<table onselectstart="return false;" class="table">
+    <thead>
+        <tr>
+            <th>特店代號</th>
+            <th>加油站名稱</th>
+            <th>交易型式</th>
+            <th>補發點數</th>
+            <th>會員型式</th>
+            <th>會員編號</th>
+            <th>交易日期</th>
+            <th>銷帳編號</th>
+            <th>愛金卡收單日</th>
+            <th>愛金卡補點狀態</th>
+        </tr>
+    </thead>
+    <tbody id="report_tbody">
+        @*@{
+            foreach (FPCCTradePoint result in results)
+            {
+                <tr>
+                    <td>@result.StoreID</td>
+                    <td>@result.StoreName</td>
+                    <td>@result.TradeType</td>
+                    <td>@result.TradePoint</td>
+                    <td>@result.MemberType</td>
+                    <td>@result.MemberNo</td>
+                    <td>@result.TradeDate</td>
+                    <td>@result.WriteOffNo</td>
+                    <td>@result.iCashDate</td>
+                    <td>@result.PointStatus</td>
+                </tr>
+            }
+        }*@
+    </tbody>
+</table>
+
+@Scripts.Render("~/bundles/jquery")
+<script>
+    function req_query() {
+        $.ajax({
+            type: "GET",
+            url: "/PointReport/Details",
+            async: false,
+            dataType: "json",
+            success: function (res) {
+                if (Object.keys(res).length > 0) {
+                    
+                    $('#report_tbody').empty();
+                    alert('查詢成功!');
+
+                    for (let i = 0; i < Object.keys(res).length; i++) {
+                        let current_tr = $('<tr></tr>');
+                        current_tr.click(function (e) {
+                            $(e.currentTarget).toggleClass("selected_tr");
+                        })
+
+                        let current_json = res[i];
+                        delete current_json['CreateDate'];
+                        delete current_json['ModifyDate'];
+
+                        Object.keys(current_json).forEach(function (j) {
+                                let current_td = $('<td>' + current_json[j] + '</td>');
+                                current_tr.append(current_td);
+                        })
+                        $('#report_tbody').append(current_tr);
+                    }
+                }
+            }
+        })
+    }
+    $('#btn_query').click(req_query);
+
+    function check_delete() {
+        if ($('#report_tbody tr').hasClass('selected_tr')) {
+            if ($('.selected_tr').length > 1) {
+                let confirm_result = confirm('要刪除已選擇的 ' + $('.selected_tr').length + ' 筆資料嗎?');
+                if (confirm_result) {
+
+                } else {
+                    $('#report_tbody tr').removeClass('selected_tr');
+                }
+
+            } else {
+                let confirm_txt = '請確認欲刪除的資料內容：\n';
+                confirm_txt += '特店代號：' + $('.selected_tr').children().eq(0).text() + '\n';
+                confirm_txt += '加油站名稱：' + $('.selected_tr').children().eq(1).text() + '\n';
+                confirm_txt += '交易型式：' + $('.selected_tr').children().eq(2).text() + '\n';
+                confirm_txt += '補發點數：' + $('.selected_tr').children().eq(3).text() + '\n';
+                confirm_txt += '會員型式：' + $('.selected_tr').children().eq(4).text() + '\n';
+                confirm_txt += '會員編號：' + $('.selected_tr').children().eq(5).text() + '\n';
+                confirm_txt += '交易日期：' + $('.selected_tr').children().eq(6).text() + '\n';
+                confirm_txt += '銷帳編號：' + $('.selected_tr').children().eq(7).text() + '\n';
+                confirm_txt += '愛金卡收單日：' + $('.selected_tr').children().eq(8).text() + '\n';
+                confirm_txt += '愛金卡補點狀態：' + $('.selected_tr').children().eq(9).text() + '\n';
+                let confirm_result = confirm(confirm_txt);
+
+                if (confirm_result) {
+                    req_json = {
+                        'StoreID' : $('.selected_tr').children().eq(0).text(),
+                        'StoreName' : $('.selected_tr').children().eq(1).text(),
+                        'TradeType' : $('.selected_tr').children().eq(2).text(),
+                        'TradePoint' : $('.selected_tr').children().eq(3).text(),
+                        'MemberType' : $('.selected_tr').children().eq(4).text(),
+                        'MemberNo' : $('.selected_tr').children().eq(5).text(),
+                        'TradeDate' : $('.selected_tr').children().eq(6).text(),
+                        'WriteOffNo' : $('.selected_tr').children().eq(7).text(),
+                        'iCashDate' : $('.selected_tr').children().eq(8).text(),
+                        'PointStatus' : $('.selected_tr').children().eq(9).text()
+                    }
+                    req_delete(req_json);
+                } else {
+                    $('#report_tbody tr').removeClass('selected_tr');
+                }
+            }
+        }
+    }
+    function req_delete(req_json) {
+        $.ajax({
+            type: "POST",
+            url: "/PointReport/Delete",
+            data: "json",
+            dataType: "json",
+            success: function (res) {
+                console.log(res)
+            }
+        })
+    }
+
+    $('#btn_delete').click(check_delete);
+</script>

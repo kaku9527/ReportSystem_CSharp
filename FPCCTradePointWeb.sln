@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33214.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPCCTradePointWeb", "FPCCTradePointWeb\FPCCTradePointWeb.csproj", "{F6BCAD63-E122-43CC-B020-1010219A88DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6BCAD63-E122-43CC-B020-1010219A88DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6BCAD63-E122-43CC-B020-1010219A88DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6BCAD63-E122-43CC-B020-1010219A88DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6BCAD63-E122-43CC-B020-1010219A88DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B05A09F-2472-4F1B-8290-F85194D882A4}
+	EndGlobalSection
+EndGlobal
